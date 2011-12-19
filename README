@@ -1,0 +1,10 @@
+* client
+** require
+- google chrome
+
+* server
+** require
+- maven 3
+
+$ cd server
+$ mvn jetty:run

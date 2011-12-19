@@ -1,0 +1,49 @@
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <Target>System.out</Target>
+    <encoder>
+      <Pattern>%d [%thread] %-5level %logger{35} - %msg%n
+      </Pattern>
+    </encoder>
+  </appender>
+
+  <!--Daily rolling file appender -->
+  <appender name="FILE"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>target/DRM.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <FileNamePattern>target/DRM.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+      <MaxHistory>30</MaxHistory>
+    </rollingPolicy>
+    <encoder>
+      <Pattern>%d [%thread] %-5level %logger{35} - %msg%n
+      </Pattern>
+    </encoder>
+  </appender>
+
+  <!--Daily rolling file appender -->
+  <appender name="ALERT"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>target/alert_log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>target/alert_log.%d{yyyy-MM-dd}
+      </FileNamePattern>
+    </rollingPolicy>
+    <encoder>
+      <Pattern>%d [%thread] %-5level %logger{35} - %msg%n
+      </Pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
+  <logger name="jp.co.dwango" level="DEBUG">
+    <appender-ref ref="ALERT" />
+  </logger>
+  <root>
+    <level value="INFO" />
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>

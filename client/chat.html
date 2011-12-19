@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>chat</title>
+<script type="text/javascript"><!--
+window.onload = function(){
+  var win = window;
+  var doc = document;
+
+  var ws = new WebSocket("ws://127.0.0.1:8080/chatty");
+
+  var logElem = doc.getElementById("log");
+  var inputElem = doc.getElementById("input");
+  var nameElem = doc.getElementById("name");
+
+  var name = win.localStorage.getItem("chatty-name");
+
+  function chatlog(message){
+    var text = logElem.innerText;
+    logElem.innerText = text + "\n" + message;
+    win.scrollTo(win.scrollX, inputElem.offsetTop);
+  }
+  function resetName(){
+    var name = win.prompt("input name", "name here");
+    win.localStorage.setItem("chatty-name", name);
+    nameElem.innerText = "(" + name + ") ";
+    return name;
+  }
+
+  ws.onmessage = function(e){
+    chatlog(e.data);
+  }
+  inputElem.onkeydown = function(e){
+    var code = e.keyCode;
+    if (code == 13) {
+      e.preventDefault();
+      var text = nameElem.innerText + inputElem.value;
+      ws.send(text);
+      inputElem.value = "";
+    }
+  };
+
+  if (!name) {
+    name = resetName();
+  }
+  nameElem.onclick = resetName;
+  nameElem.innerText = "(" + name + ") ";
+};
+// -->
+</script>
+</head>
+<body>
+  <h1>chat</h1>
+  <pre id="log">(system) log here</pre>
+  <div><span id="name" style="cursor: pointer; color: blue;">(name)</span><input type="text" id="input" autocomplete="off"></input></div>
+</body>
+</html>
+<!-- vim: set fenc=utf-8 ts=2 sw=2 et: -->
